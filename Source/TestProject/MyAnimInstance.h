@@ -27,6 +27,14 @@ private:
 	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	uint8 bShouldMove : 1;
 
+	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	uint8 bIsFalling : 1;
+
+	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	FVector Velocity;
+
+	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	float YawOffset;
 public:
 	virtual void NativeInitializeAnimation() override;
 	virtual void NativeBeginPlay() override;
