@@ -6,10 +6,19 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
+UMyAnimInstance::UMyAnimInstance()
+{
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> AnimMontageRef(TEXT("/Script/Engine.AnimMontage'/Game/ParagonSparrow/Characters/Heroes/Sparrow/Animations/Primary_Fire_Med_Montage.Primary_Fire_Med_Montage'"));
+	if (AnimMontageRef.Object)
+	{
+		FireMontage = AnimMontageRef.Object;
+	}
+}
+
 void UMyAnimInstance::NativeInitializeAnimation()
 {
 	Super::NativeInitializeAnimation();
-
+	
 }
 
 void UMyAnimInstance::NativeBeginPlay()
@@ -33,21 +42,33 @@ void UMyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	{
 		Velocity = CharacterMovement->Velocity;
 		FRotator Rotation = MyCharacter->GetActorRotation();
-		FVector UnRotateVector = Rotation.UnrotateVector(Velocity);
-		UnRotateVector.Normalize();
+		//FVector UnRotateVector = Rotation.UnrotateVector(Velocity);
+		//UnRotateVector.Normalize();
 
-		Vertical = UnRotateVector.X;
-		Horizontal = UnRotateVector.Y;
+		//Vertical = UnRotateVector.X;
+		//Horizontal = UnRotateVector.Y;
 		Speed = MyCharacter->GetVelocity().Size2D();
 
 		auto Acceleration = CharacterMovement->GetCurrentAcceleration();
 		bShouldMove = Speed > 3.f && Acceleration != FVector::Zero();
 		bIsFalling = CharacterMovement->IsFalling();
 
-		FRotator BaseAimRotation = MyCharacter->GetBaseAimRotation();
+		AimRotation = MyCharacter->GetBaseAimRotation();
 		FRotator VelocityRotation = UKismetMathLibrary::MakeRotFromX(Velocity);
 
-		FRotator DeltaRotation = VelocityRotation - BaseAimRotation;
+		FRotator DeltaRotation = VelocityRotation - AimRotation;
+		DeltaRotation.Normalize();
 		YawOffset = DeltaRotation.Yaw;
+	}
+}
+
+void UMyAnimInstance::PlayFireMontage()
+{
+	if (IsValid(FireMontage))
+	{
+		if (!Montage_IsPlaying(FireMontage))
+		{
+			Montage_Play(FireMontage);
+		}
 	}
 }

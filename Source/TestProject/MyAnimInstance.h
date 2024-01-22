@@ -18,11 +18,11 @@ private:
 	UPROPERTY(Category="Animation",EditAnywhere,BlueprintReadOnly,meta=(AllowPrivateAccess=true))
 	float Speed;
 
-	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	float Horizontal;
+	//UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	//float Horizontal;
 
-	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	float Vertical;
+	//UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	//float Vertical;
 	
 	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	uint8 bShouldMove : 1;
@@ -35,7 +35,11 @@ private:
 
 	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	float YawOffset;
+
+	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	FRotator AimRotation;
 public:
+	UMyAnimInstance();
 	virtual void NativeInitializeAnimation() override;
 	virtual void NativeBeginPlay() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
@@ -47,5 +51,12 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	class UCharacterMovementComponent* CharacterMovement;
+
+	UPROPERTY(VisibleAnywhere)
+	UAnimMontage* FireMontage;
+
+	//Fire
+public:
+	void PlayFireMontage();
 
 };

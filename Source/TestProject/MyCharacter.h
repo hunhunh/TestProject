@@ -40,4 +40,9 @@ public:
 	void KeyLeftRight(float value);
 	void MouseLookLeftRight(float value);
 	void MouseLookUpDown(float value);
+	void Fire();
+
+	//Fire
+private:
+	class UMyAnimInstance* MyAnimInstance;
 };
