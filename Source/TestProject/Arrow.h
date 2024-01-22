@@ -25,5 +25,15 @@ public:
 
 private:
 	UPROPERTY(VisibleAnywhere)
+	USceneComponent* DefaultRoot;
+
+	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* Mesh;
+
+	UPROPERTY(VisibleAnywhere)
+	class UBoxComponent* CollisionMesh;
+	
+	UPROPERTY(VisibleAnywhere)
+	class UProjectileMovementComponent* ProjectileMovementComponent;
+
 };

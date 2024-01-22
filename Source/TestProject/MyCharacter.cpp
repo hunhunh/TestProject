@@ -6,6 +6,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Camera/CameraComponent.h"
 #include "MyAnimInstance.h"
+#include "Arrow.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -92,6 +93,13 @@ void AMyCharacter::Fire()
 	if (IsValid(MyAnimInstance))
 	{
 		MyAnimInstance->PlayFireMontage();
+		FTransform SocketTransform = GetMesh()->GetSocketTransform(FName("ArrowSocket"));
+		FVector SocketVector = SocketTransform.GetLocation();
+		FRotator SocketRotator = SocketTransform.GetRotation().Rotator();
+		FActorSpawnParameters params;
+		params.Owner = this;
+
+		auto MyArrow = GetWorld()->SpawnActor<AArrow>(SocketVector,SocketRotator,params);
 	}
 }
 

@@ -38,6 +38,9 @@ private:
 
 	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	FRotator AimRotation;
+
+	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	float RotateYaw;
 public:
 	UMyAnimInstance();
 	virtual void NativeInitializeAnimation() override;
