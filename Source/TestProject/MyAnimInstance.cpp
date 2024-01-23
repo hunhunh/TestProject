@@ -47,7 +47,7 @@ void UMyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 		//Vertical = UnRotateVector.X;
 		//Horizontal = UnRotateVector.Y;
-		Speed = MyCharacter->GetVelocity().Size2D();
+		Speed = Velocity.Size2D();
 
 		auto Acceleration = CharacterMovement->GetCurrentAcceleration();
 		bShouldMove = Speed > 3.f && Acceleration != FVector::Zero();
