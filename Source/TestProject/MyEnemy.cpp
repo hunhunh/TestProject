@@ -4,6 +4,7 @@
 #include "MyEnemy.h"
 #include "Components/CapsuleComponent.h"
 #include "MyAIController.h"
+#include "EnemyAnimInstance.h"
 
 // Sets default values
 AMyEnemy::AMyEnemy()
@@ -17,6 +18,12 @@ AMyEnemy::AMyEnemy()
 	{
 		GetMesh()->SetSkeletalMesh(SkeletaMeshRef.Object);
 		GetMesh()->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -90.f), FRotator(0.f, -90.f, 0.f));
+	}
+
+	static ConstructorHelpers::FClassFinder<UAnimInstance> AI_Ref(TEXT("/Script/Engine.AnimBlueprint'/Game/Animation/ABP_Enemy.ABP_Enemy_C'"));
+	if (AI_Ref.Class)
+	{
+		GetMesh()->SetAnimClass(AI_Ref.Class);
 	}
 
 	AIControllerClass = AMyAIController::StaticClass();
@@ -41,5 +48,15 @@ void AMyEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AMyEnemy::Attack()
+{
+	UE_LOG(LogTemp, Log, TEXT("Attack"));
+	auto EnemyInstance = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
+	if (IsValid(EnemyInstance))
+	{
+		EnemyInstance->PlayAttackMontage();
+	}
 }
 
