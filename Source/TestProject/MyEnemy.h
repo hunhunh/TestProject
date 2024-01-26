@@ -28,5 +28,12 @@ public:
 
 public:
 	void Attack();
+	UFUNCTION()
+	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
+	bool GetIsAttacking() const { return IsAttacking; }
 
+private:
+	UPROPERTY(VisibleAnywhere)
+	class UEnemyAnimInstance* AnimInstance;
+	bool IsAttacking = false;
 };

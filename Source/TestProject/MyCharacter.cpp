@@ -7,6 +7,7 @@
 #include "Camera/CameraComponent.h"
 #include "MyAnimInstance.h"
 #include "Arrow.h"
+#include "MyActorComponent.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -39,6 +40,7 @@ AMyCharacter::AMyCharacter()
 	{
 		GetMesh()->SetAnimClass(AnimInstanceRef.Class);
 	}
+	ActorComponent = CreateDefaultSubobject<UMyActorComponent>(TEXT("ActorComponent"));
 }
 
 // Called when the game starts or when spawned

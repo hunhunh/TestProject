@@ -34,6 +34,8 @@ void AMyEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	AnimInstance = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
+	AnimInstance->OnMontageEnded.AddDynamic(this, &AMyEnemy::OnAttackMontageEnded);
 }
 
 // Called every frame
@@ -52,11 +54,19 @@ void AMyEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AMyEnemy::Attack()
 {
-	UE_LOG(LogTemp, Log, TEXT("Attack"));
-	auto EnemyInstance = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
-	if (IsValid(EnemyInstance))
+	if (!IsAttacking)
 	{
-		EnemyInstance->PlayAttackMontage();
+		IsAttacking = true;
+		if (IsValid(AnimInstance))
+		{
+			AnimInstance->PlayAttackMontage();
+		}
 	}
+	
+}
+
+void AMyEnemy::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
+{
+	IsAttacking = false;
 }
 

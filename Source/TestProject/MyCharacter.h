@@ -44,5 +44,8 @@ public:
 
 	//Fire
 private:
+	UPROPERTY(VisibleAnywhere)
 	class UMyAnimInstance* MyAnimInstance;
+	UPROPERTY(VisibleAnywhere)
+	class UMyActorComponent* ActorComponent;
 };

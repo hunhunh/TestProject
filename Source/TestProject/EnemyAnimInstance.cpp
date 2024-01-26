@@ -2,6 +2,8 @@
 
 
 #include "EnemyAnimInstance.h"
+#include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 UEnemyAnimInstance::UEnemyAnimInstance()
 {
@@ -22,4 +24,23 @@ void UEnemyAnimInstance::PlayAttackMontage()
 		}
 	}
 	
+}
+
+void UEnemyAnimInstance::NativeBeginPlay()
+{
+	Character = Cast<ACharacter>(TryGetPawnOwner());
+	if (IsValid(Character))
+	{
+		CharacterMovement = Cast<UCharacterMovementComponent>(Character->GetMovementComponent());
+	}
+}
+
+void UEnemyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
+{
+	if (IsValid(Character))
+	{
+		Velocity = CharacterMovement->Velocity;
+		Speed = Velocity.Size2D();
+		bShouldMove = Speed > 3.f;
+	}
 }
