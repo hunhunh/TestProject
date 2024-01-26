@@ -36,4 +36,8 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class UEnemyAnimInstance* AnimInstance;
 	bool IsAttacking = false;
+
+	//stat
+private:
+	class UMyActorComponent* ActorComponent;
 };

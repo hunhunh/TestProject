@@ -2,6 +2,8 @@
 
 
 #include "MyActorComponent.h"
+#include "MyGameInstance.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
 UMyActorComponent::UMyActorComponent()
@@ -34,10 +36,29 @@ void UMyActorComponent::BeginPlay()
 
 void UMyActorComponent::SetLevel(int32 Lv)
 {
+	auto GameInstance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GameInstance)
+	{
+		auto CharacterData = GameInstance->GetCharacterData(Lv);
+		if (CharacterData)
+		{
+			Level = CharacterData->Level;
+			MaxHp = CharacterData->MaxHp;
+			Hp = MaxHp;
+
+			UE_LOG(LogTemp, Log, TEXT("Lv : %d   Hp : %d"),Level,Hp	);
+		}
+	}
 }
 
 void UMyActorComponent::OnDamaged(float DamageAmount)
 {
+	Hp -= DamageAmount;
+	if (Hp < 0)
+	{
+		Hp = 0;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("HP : %d"), Hp);
 }
 
 
