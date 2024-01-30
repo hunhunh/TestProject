@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "BaseCharacter.h"
 #include "MyEnemy.generated.h"
 
 UCLASS()
-class TESTPROJECT_API AMyEnemy : public ACharacter
+class TESTPROJECT_API AMyEnemy : public ABaseCharacter
 {
 	GENERATED_BODY()
 
@@ -27,17 +28,6 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 public:
-	void Attack();
-	UFUNCTION()
-	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 	bool GetIsAttacking() const { return IsAttacking; }
 
-private:
-	UPROPERTY(VisibleAnywhere)
-	class UEnemyAnimInstance* AnimInstance;
-	bool IsAttacking = false;
-
-	//stat
-private:
-	class UMyActorComponent* ActorComponent;
 };

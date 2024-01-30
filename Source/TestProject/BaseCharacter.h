@@ -4,17 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "BaseCharacter.h"
-#include "MyCharacter.generated.h"
+#include "BaseCharacter.generated.h"
 
 UCLASS()
-class TESTPROJECT_API AMyCharacter : public ABaseCharacter
+class TESTPROJECT_API ABaseCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this character's properties
-	AMyCharacter();
+	ABaseCharacter();
 
 protected:
 	// Called when the game starts or when spawned
@@ -27,20 +26,22 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	//Camera 
-private:
+protected:
 	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<class USpringArmComponent> SpringArm;
-
+	class UMyActorComponent* ActorComponent;
 	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<class UCameraComponent> Camera;
+	bool IsAttacking = false;
+	UPROPERTY(VisibleAnywhere)
+	class UBaseAnimInstance* BaseAnimInstance;
 
-	//input
 public:
-	void KeyUpDown(float value);
-	void KeyLeftRight(float value);
-	void MouseLookLeftRight(float value);
-	void MouseLookUpDown(float value);
-	virtual void Attack() override;
-	
+	UFUNCTION()
+	virtual void Attack();
+
+	//Hit
+public:
+	UFUNCTION()
+	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
+	UFUNCTION()
+	void OnHit();
 };

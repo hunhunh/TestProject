@@ -29,8 +29,7 @@ AMyEnemy::AMyEnemy()
 
 	AIControllerClass = AMyAIController::StaticClass();
 
-	//stat
-	ActorComponent = CreateDefaultSubobject<UMyActorComponent>(TEXT("MyActorComponent"));
+	
 }
 
 // Called when the game starts or when spawned
@@ -38,8 +37,6 @@ void AMyEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	AnimInstance = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
-	AnimInstance->OnMontageEnded.AddDynamic(this, &AMyEnemy::OnAttackMontageEnded);
 }
 
 // Called every frame
@@ -55,22 +52,3 @@ void AMyEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
-
-void AMyEnemy::Attack()
-{
-	if (!IsAttacking)
-	{
-		IsAttacking = true;
-		if (IsValid(AnimInstance))
-		{
-			AnimInstance->PlayAttackMontage();
-		}
-	}
-	
-}
-
-void AMyEnemy::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
-{
-	IsAttacking = false;
-}
-

@@ -11,49 +11,29 @@ UMyAnimInstance::UMyAnimInstance()
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> AnimMontageRef(TEXT("/Script/Engine.AnimMontage'/Game/ParagonSparrow/Characters/Heroes/Sparrow/Animations/Primary_Fire_Med_Montage.Primary_Fire_Med_Montage'"));
 	if (AnimMontageRef.Object)
 	{
-		FireMontage = AnimMontageRef.Object;
-	}
-}
-
-void UMyAnimInstance::NativeInitializeAnimation()
-{
-	Super::NativeInitializeAnimation();
-	
-}
-
-void UMyAnimInstance::NativeBeginPlay()
-{
-	Super::NativeBeginPlay();
-	auto Pawn = TryGetPawnOwner();
-	if (IsValid(Pawn))
-	{
-		MyCharacter = Cast<AMyCharacter>(Pawn);
-		if (IsValid(MyCharacter))
-		{
-			CharacterMovement = MyCharacter->GetCharacterMovement();
-		}
+		AttackMontage = AnimMontageRef.Object;
 	}
 }
 
 void UMyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
-	if (IsValid(MyCharacter))
+	if (IsValid(Character))
 	{
-		Velocity = CharacterMovement->Velocity;
-		FRotator Rotation = MyCharacter->GetActorRotation();
+		
+		FRotator Rotation = Character->GetActorRotation();
 		//FVector UnRotateVector = Rotation.UnrotateVector(Velocity);
 		//UnRotateVector.Normalize();
 
 		//Vertical = UnRotateVector.X;
 		//Horizontal = UnRotateVector.Y;
-		Speed = Velocity.Size2D();
+		
 
 		auto Acceleration = CharacterMovement->GetCurrentAcceleration();
 		bShouldMove = Speed > 3.f && Acceleration != FVector::Zero();
 		bIsFalling = CharacterMovement->IsFalling();
 
-		AimRotation = MyCharacter->GetBaseAimRotation();
+		AimRotation = Character->GetBaseAimRotation();
 		FRotator VelocityRotation = UKismetMathLibrary::MakeRotFromX(Velocity);
 
 		FRotator DeltaRotation = VelocityRotation - AimRotation;
@@ -63,14 +43,14 @@ void UMyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		if (bShouldMove || bIsFalling)
 		{
 			RotateYaw = FMath::FInterpTo(RotateYaw, 0.f, DeltaSeconds, 20.0f);
-			MovingRotation = MyCharacter->GetActorRotation();
+			MovingRotation = Character->GetActorRotation();
 			PrevRotation = MovingRotation;
 
 		}
 		else
 		{
 			PrevRotation = MovingRotation;
-			MovingRotation = MyCharacter->GetActorRotation();
+			MovingRotation = Character->GetActorRotation();
 			FRotator Delta = MovingRotation - PrevRotation;
 			Delta.Normalize();
 			RotateYaw -= Delta.Yaw;
@@ -112,15 +92,4 @@ void UMyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 	}
 	
-}
-
-void UMyAnimInstance::PlayFireMontage()
-{
-	if (IsValid(FireMontage))
-	{
-		if (!Montage_IsPlaying(FireMontage))
-		{
-			Montage_Play(FireMontage);
-		}
-	}
 }

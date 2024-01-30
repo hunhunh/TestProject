@@ -4,19 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "BaseAnimInstance.h"
 #include "MyAnimInstance.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TESTPROJECT_API UMyAnimInstance : public UAnimInstance
+class TESTPROJECT_API UMyAnimInstance : public UBaseAnimInstance
 {
 	GENERATED_BODY()
 
 private:
-	UPROPERTY(Category="Animation",EditAnywhere,BlueprintReadOnly,meta=(AllowPrivateAccess=true))
-	float Speed;
 
 	//UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	//float Horizontal;
@@ -24,14 +23,10 @@ private:
 	//UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	//float Vertical;
 	
-	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	uint8 bShouldMove : 1;
 
 	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	uint8 bIsFalling : 1;
 
-	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	FVector Velocity;
 
 	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	float YawOffset;
@@ -59,23 +54,6 @@ private:
 
 public:
 	UMyAnimInstance();
-	virtual void NativeInitializeAnimation() override;
-	virtual void NativeBeginPlay() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
-
-
-private: 
-	UPROPERTY(VisibleAnywhere)
-	class AMyCharacter* MyCharacter;
-
-	UPROPERTY(VisibleAnywhere)
-	class UCharacterMovementComponent* CharacterMovement;
-
-	UPROPERTY(VisibleAnywhere)
-	UAnimMontage* FireMontage;
-
-	//Fire
-public:
-	void PlayFireMontage();
 
 };

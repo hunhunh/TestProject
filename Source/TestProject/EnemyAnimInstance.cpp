@@ -14,33 +14,12 @@ UEnemyAnimInstance::UEnemyAnimInstance()
 	}
 }
 
-void UEnemyAnimInstance::PlayAttackMontage()
-{
-	if (IsValid(AttackMontage))
-	{
-		if (!Montage_IsPlaying(AttackMontage))
-		{
-			Montage_Play(AttackMontage);
-		}
-	}
-	
-}
-
-void UEnemyAnimInstance::NativeBeginPlay()
-{
-	Character = Cast<ACharacter>(TryGetPawnOwner());
-	if (IsValid(Character))
-	{
-		CharacterMovement = Cast<UCharacterMovementComponent>(Character->GetMovementComponent());
-	}
-}
-
 void UEnemyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
+	Super::NativeUpdateAnimation(DeltaSeconds);
+
 	if (IsValid(Character))
 	{
-		Velocity = CharacterMovement->Velocity;
-		Speed = Velocity.Size2D();
 		bShouldMove = Speed > 3.f;
 	}
 }
