@@ -4,6 +4,8 @@
 #include "BaseCharacter.h"
 #include "MyActorComponent.h"
 #include "BaseAnimInstance.h"
+#include "Components/WidgetComponent.h"
+#include "HpBarWidget.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -12,6 +14,18 @@ ABaseCharacter::ABaseCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	ActorComponent = CreateDefaultSubobject<UMyActorComponent>(TEXT("ActorComponent"));
+	
+	HpBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HpBar"));
+	HpBar->SetupAttachment(GetMesh());
+	HpBar->SetWidgetSpace(EWidgetSpace::Screen);
+	static ConstructorHelpers::FClassFinder<UHpBarWidget> HpBar_Ref(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/WBP_HpBar.WBP_HpBar_C'"));
+	if (HpBar_Ref.Succeeded())
+	{
+		HpBar->SetWidgetClass(HpBar_Ref.Class);
+		HpBar->SetDrawSize(FVector2D(200.f, 30.f));
+		HpBar->SetRelativeLocation(FVector(0.f, 0.f, 200.f));
+	}
+
 }
 
 // Called when the game starts or when spawned
@@ -58,8 +72,10 @@ void ABaseCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupt
 	IsAttacking = false;
 }
 
-void ABaseCharacter::OnHit()
+float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	UE_LOG(LogTemp, Log, TEXT("Hit"));
-}
+	UE_LOG(LogTemp, Log, TEXT("Take Damage : %f"), DamageAmount);
+	ActorComponent->OnDamaged(DamageAmount);
 
+	return DamageAmount;
+}

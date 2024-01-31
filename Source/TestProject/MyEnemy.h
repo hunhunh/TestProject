@@ -30,4 +30,7 @@ public:
 public:
 	bool GetIsAttacking() const { return IsAttacking; }
 
+	//Hit
+public:
+	virtual void OnHit() override;
 };

@@ -32,4 +32,9 @@ private:
 public:
 	void SetLevel(int32 Lv);
 	void OnDamaged(float DamageAmount);
+
+	//HpBar
+public:
+	void SetHp(int32 NewHp);
+	float GetHpRatio();
 };

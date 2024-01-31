@@ -43,5 +43,10 @@ public:
 	UFUNCTION()
 	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 	UFUNCTION()
-	void OnHit();
+	virtual void OnHit() {};
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
+	//Widget
+protected:
+	class UWidgetComponent* HpBar;
 };

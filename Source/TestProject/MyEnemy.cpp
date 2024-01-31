@@ -6,6 +6,7 @@
 #include "MyAIController.h"
 #include "EnemyAnimInstance.h"
 #include "MyActorComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AMyEnemy::AMyEnemy()
@@ -51,4 +52,44 @@ void AMyEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AMyEnemy::OnHit()
+{
+	Super::OnHit();
+
+	FHitResult HitResult;
+	FCollisionQueryParams Params(NAME_None, false, this);
+
+	float AttackRange = 100.f;
+	float AttackRadius = 50.f;
+
+	bool Result = GetWorld()->SweepSingleByChannel
+	(
+		OUT HitResult,
+		GetActorLocation(),
+		GetActorLocation() + GetActorForwardVector() * AttackRange,
+		FQuat::Identity,
+		ECollisionChannel::ECC_GameTraceChannel2,
+		FCollisionShape::MakeSphere(AttackRadius),
+		Params
+	);
+
+	FVector Center = GetActorLocation();
+	FVector Forward = GetActorLocation() + GetActorForwardVector() * AttackRange;
+	float HalfHeight = AttackRange * 0.5f + AttackRange;
+	FQuat Rotation = FRotationMatrix::MakeFromZ(Forward).ToQuat();
+	FColor DrawColor;
+
+	if (Result && HitResult.GetActor())
+	{
+		DrawColor = FColor::Green;
+		AActor* HitActor = HitResult.GetActor();
+		UGameplayStatics::ApplyDamage(HitActor, 10.f, GetController(), nullptr, NULL);
+	}
+	else
+	{
+		DrawColor = FColor::Red;
+	}
+	DrawDebugCapsule(GetWorld(), Center, HalfHeight, AttackRadius, Rotation, DrawColor, false, 2.f);
 }

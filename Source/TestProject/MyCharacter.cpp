@@ -95,6 +95,13 @@ void AMyCharacter::Attack()
 {
 	Super::Attack();
 
+	
+}
+
+void AMyCharacter::OnHit()
+{
+	Super::OnHit();
+
 	if (IsValid(BaseAnimInstance))
 	{
 		BaseAnimInstance->PlayAttackMontage();
@@ -104,7 +111,7 @@ void AMyCharacter::Attack()
 		FActorSpawnParameters params;
 		params.Owner = this;
 
-		auto MyArrow = GetWorld()->SpawnActor<AArrow>(SocketVector,SocketRotator,params);
+		auto MyArrow = GetWorld()->SpawnActor<AArrow>(SocketVector, SocketRotator, params);
 	}
 }
 

@@ -43,4 +43,8 @@ public:
 	void MouseLookUpDown(float value);
 	virtual void Attack() override;
 	
+
+	//Hit
+public:
+	virtual void OnHit() override;
 };
