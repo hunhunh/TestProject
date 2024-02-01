@@ -129,13 +129,19 @@ void AMyCharacter::OnHit()
 		params
 	);
 
+	FColor Color;
+
 	if (Result)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Hit"));
+		Color = FColor::Green;
+		DrawDebugLine(GetWorld(), Center, Forward, Color, false, 2.f, 0, 5);
 	}
 	else
 	{
 		UE_LOG(LogTemp, Log, TEXT("Not Hit"));
+		Color = FColor::Red;
+		DrawDebugLine(GetWorld(), Center, Forward, Color, false, 2.f, 0, 5);
 	}
 }
 
