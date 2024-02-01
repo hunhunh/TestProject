@@ -39,6 +39,12 @@ void ABaseCharacter::BeginPlay()
 		BaseAnimInstance->OnMontageEnded.AddDynamic(this, &ABaseCharacter::OnAttackMontageEnded);
 		BaseAnimInstance->OnAttackHit.AddUObject(this, &ABaseCharacter::OnHit);
 	}
+
+	auto HpWidget = Cast<UHpBarWidget>(HpBar->GetUserWidgetObject());
+	if (HpWidget)
+	{
+		HpWidget->BindHp(ActorComponent);
+	}
 }
 
 // Called every frame

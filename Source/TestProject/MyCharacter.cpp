@@ -113,5 +113,29 @@ void AMyCharacter::OnHit()
 
 		auto MyArrow = GetWorld()->SpawnActor<AArrow>(SocketVector, SocketRotator, params);
 	}
+	float AttackRange = 10000.f;
+	FHitResult HitResult;
+	FVector Center = GetActorLocation();
+	FVector Forward = Center + GetActorForwardVector() * AttackRange;
+	FCollisionQueryParams params;
+	params.AddIgnoredActor(this);
+
+	bool Result = GetWorld()->LineTraceSingleByChannel
+	(
+		OUT HitResult,
+		Center,
+		Forward,
+		ECollisionChannel::ECC_GameTraceChannel1,
+		params
+	);
+
+	if (Result)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Hit"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Log, TEXT("Not Hit"));
+	}
 }
 

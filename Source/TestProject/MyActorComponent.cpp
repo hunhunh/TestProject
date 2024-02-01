@@ -31,7 +31,6 @@ void UMyActorComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UE_LOG(LogTemp, Log, TEXT("ActorComponent"));
 }
 
 void UMyActorComponent::SetLevel(int32 Lv)
@@ -46,7 +45,6 @@ void UMyActorComponent::SetLevel(int32 Lv)
 			MaxHp = CharacterData->MaxHp;
 			Hp = MaxHp;
 
-			UE_LOG(LogTemp, Log, TEXT("Lv : %d   Hp : %d"),Level,Hp	);
 		}
 	}
 }
@@ -64,6 +62,8 @@ void UMyActorComponent::SetHp(int32 NewHp)
 	{
 		Hp = 0;
 	}
+
+	OnHpChange.Broadcast();
 }
 
 float UMyActorComponent::GetHpRatio()

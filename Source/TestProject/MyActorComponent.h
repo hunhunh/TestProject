@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "MyActorComponent.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnHpChange);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TESTPROJECT_API UMyActorComponent : public UActorComponent
@@ -37,4 +38,7 @@ public:
 public:
 	void SetHp(int32 NewHp);
 	float GetHpRatio();
+
+public:
+	FOnHpChange OnHpChange;
 };
