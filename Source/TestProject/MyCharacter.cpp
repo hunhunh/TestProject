@@ -8,6 +8,8 @@
 #include "MyAnimInstance.h"
 #include "Arrow.h"
 #include "MyActorComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Camera/PlayerCameraManager.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -102,30 +104,22 @@ void AMyCharacter::OnHit()
 {
 	Super::OnHit();
 
-	if (IsValid(BaseAnimInstance))
-	{
-		BaseAnimInstance->PlayAttackMontage();
-		FTransform SocketTransform = GetMesh()->GetSocketTransform(FName("ArrowSocket"));
-		FVector SocketVector = SocketTransform.GetLocation();
-		FRotator SocketRotator = SocketTransform.GetRotation().Rotator();
-		FActorSpawnParameters params;
-		params.Owner = this;
+	
+	APlayerCameraManager* CamManger = UGameplayStatics::GetPlayerCameraManager(this,0);
 
-		auto MyArrow = GetWorld()->SpawnActor<AArrow>(SocketVector, SocketRotator, params);
-	}
 	float AttackRange = 10000.f;
 	FHitResult HitResult;
-	FVector Center = GetActorLocation();
-	FVector Forward = Center + GetActorForwardVector() * AttackRange;
+	FVector AimLocation = CamManger->GetCameraLocation();
+	FVector TargetLocation = AimLocation + CamManger->GetActorForwardVector() * AttackRange;
 	FCollisionQueryParams params;
 	params.AddIgnoredActor(this);
 
 	bool Result = GetWorld()->LineTraceSingleByChannel
 	(
 		OUT HitResult,
-		Center,
-		Forward,
-		ECollisionChannel::ECC_GameTraceChannel1,
+		AimLocation,
+		TargetLocation,
+		ECollisionChannel::ECC_GameTraceChannel3,
 		params
 	);
 
@@ -133,15 +127,30 @@ void AMyCharacter::OnHit()
 
 	if (Result)
 	{
+		TargetLocation = HitResult.ImpactPoint;
 		UE_LOG(LogTemp, Log, TEXT("Hit"));
 		Color = FColor::Green;
-		DrawDebugLine(GetWorld(), Center, Forward, Color, false, 2.f, 0, 5);
+		DrawDebugLine(GetWorld(), AimLocation, TargetLocation, Color, true);
 	}
 	else
 	{
 		UE_LOG(LogTemp, Log, TEXT("Not Hit"));
 		Color = FColor::Red;
-		DrawDebugLine(GetWorld(), Center, Forward, Color, false, 2.f, 0, 5);
+		DrawDebugLine(GetWorld(), AimLocation, TargetLocation, Color, true);
+	}
+
+	if (IsValid(BaseAnimInstance))
+	{
+		BaseAnimInstance->PlayAttackMontage();
+		FTransform SocketTransform = GetMesh()->GetSocketTransform(FName("ArrowSocket"));
+		FVector SocketVector = SocketTransform.GetLocation();
+		FVector DeltaVector = TargetLocation - SocketVector;
+		FRotator SocketRotator = FRotationMatrix::MakeFromX(DeltaVector).Rotator();
+		FActorSpawnParameters Arrowparams;
+		Arrowparams.Owner = this;
+		Arrowparams.Instigator = this;
+
+		auto MyArrow = GetWorld()->SpawnActor<AArrow>(SocketVector, SocketRotator, Arrowparams);
 	}
 }
 
